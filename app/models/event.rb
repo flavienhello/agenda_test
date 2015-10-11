@@ -11,16 +11,15 @@ class Event < ActiveRecord::Base
 
 
   def self.availabilities( wanted_date=DateTime.parse("2014-08-10") )
+    puts "ASK RDV FOR DATE: #{wanted_date.to_date}"
     weekly_availabilites = []
     7.times.each do |i|
-      @i = i
       weekly_availabilites << calculate_daily_availabilities(wanted_date + i)
     end
     weekly_availabilites
   end
 
   def self.calculate_daily_availabilities( wanted_date )
-    puts "ASK RDV FOR DATE: #{wanted_date.to_date}"
 
     # This calculate every days an opening could have been open in the past so that it would be open to this date
     list = create_past_weekly_list wanted_date
@@ -43,14 +42,17 @@ class Event < ActiveRecord::Base
     appointments.each do |open|
       d1 = open.starts_at
       d2 = open.ends_at
-      slots.reject!{|s| s >= d1 && s < d2 }
+      slots.reject! do |s|
+        s2 = s + RDV_LENGTH_CUT.minutes
+        # Starts during a slot / Ends during a slot / Or start before it and ends after it
+        (d1 >= s && d1 < s2) || (d2 > s && d2 < s2) || (d1 < s && d2 > s2)
+      end
       puts "appointments - starts_at: #{d1} - ends_at: #{d2}"
     end
 
     # Is there an open slot for our day ?
     # Sort and Change display
     ava_array = slots.sort.map { |s| s.strftime('%k:%M').strip } || []
-    # binding.pry if @i == 1
     { date: wanted_date.to_date, slots: ava_array }
   end
 
