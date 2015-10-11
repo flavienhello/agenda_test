@@ -12,11 +12,11 @@ class Event < ActiveRecord::Base
 
   def self.availabilities( wanted_date=DateTime.parse("2014-08-10") )
     puts "ASK RDV FOR DATE: #{wanted_date.to_date}"
-    weekly_availabilites = []
+    weekly_availabilities = []
     7.times.each do |i|
-      weekly_availabilites << calculate_daily_availabilities(wanted_date + i)
+      weekly_availabilities << calculate_daily_availabilities(wanted_date + i)
     end
-    weekly_availabilites
+    weekly_availabilities
   end
 
   def self.calculate_daily_availabilities( wanted_date )
@@ -26,8 +26,9 @@ class Event < ActiveRecord::Base
     slots = []
 
     # Calculate opening in the past
-    recurring = Event.openings.where( weekly_recurring: true, starts_at: list )
-    recurring.each do |open|
+    openings = Event.openings.where( weekly_recurring: true, starts_at: list )
+    openings += Event.openings.where( 'starts_at BETWEEN ? AND ? OR ends_at BETWEEN ? AND ?', wanted_date, (wanted_date+1.day), wanted_date, (wanted_date+1.day) )
+    openings.each do |open|
       d1 = open.starts_at
       d2 = open.ends_at
       start_time = DateTime.new( wanted_date.year, wanted_date.month, wanted_date.day, d1.hour, d1.min )
@@ -45,7 +46,7 @@ class Event < ActiveRecord::Base
       slots.reject! do |s|
         s2 = s + RDV_LENGTH_CUT.minutes
         # Starts during a slot / Ends during a slot / Or start before it and ends after it
-        (d1 >= s && d1 < s2) || (d2 > s && d2 < s2) || (d1 < s && d2 > s2)
+        (d1 >= s && d1 < s2) || (d2 > s && d2 <= s2) || (d1 < s && d2 > s2)
       end
       puts "appointments - starts_at: #{d1} - ends_at: #{d2}"
     end
