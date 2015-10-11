@@ -7,6 +7,8 @@ class EventTest < ActiveSupport::TestCase
     Event.create kind: 'appointment', starts_at: DateTime.parse("2014-08-11 10:30"), ends_at: DateTime.parse("2014-08-11 11:30")
 
     availabilities = Event.availabilities DateTime.parse("2014-08-10")
+    puts availabilities
+    puts "\n ########  \n\n"
 
     assert_equal Date.new(2014, 8, 10), availabilities[0][:date]
     assert_equal [], availabilities[0][:slots]
@@ -23,6 +25,7 @@ class EventTest < ActiveSupport::TestCase
 
     availabilities = Event.availabilities DateTime.parse("2014-08-10")
     puts availabilities
+    puts "\n ########  \n\n"
 
     assert_equal Date.new(2014, 8, 10), availabilities[0][:date]
     assert_equal [], availabilities[0][:slots]
@@ -41,6 +44,7 @@ class EventTest < ActiveSupport::TestCase
 
     availabilities = Event.availabilities DateTime.parse("2014-08-10")
     puts availabilities
+    puts "\n ########  \n\n"
 
     assert_equal Date.new(2014, 8, 10), availabilities[0][:date]
     assert_equal [], availabilities[0][:slots]
@@ -55,6 +59,7 @@ class EventTest < ActiveSupport::TestCase
 
     availabilities = Event.availabilities DateTime.parse("2014-08-10")
     puts availabilities
+    puts "\n ########  \n\n"
 
     assert_equal Date.new(2014, 8, 10), availabilities[0][:date]
     assert_equal [], availabilities[0][:slots]
@@ -75,6 +80,7 @@ class EventTest < ActiveSupport::TestCase
 
     availabilities = Event.availabilities DateTime.parse("2014-08-10")
     puts availabilities
+    puts "\n ########  \n\n"
 
     assert_equal Date.new(2014, 8, 10), availabilities[0][:date]
     assert_equal [], availabilities[0][:slots]
@@ -95,9 +101,9 @@ class EventTest < ActiveSupport::TestCase
       # Event.create kind: 'appointment', starts_at: DateTime.parse("2014-08-11 10:35"), ends_at: DateTime.parse("2014-08-11 11:05")
       Event.create kind: 'appointment', starts_at: DateTime.parse("2014-08-12 10:29"), ends_at: DateTime.parse("2014-08-12 12:30")
 
-
       availabilities = Event.availabilities DateTime.parse("2014-08-10")
       puts availabilities
+      puts "\n ########  \n\n"
 
       assert_equal Date.new(2014, 8, 10), availabilities[0][:date]
       assert_equal [], availabilities[0][:slots]

@@ -35,7 +35,6 @@ class Event < ActiveRecord::Base
       end_time = DateTime.new( wanted_date.year, wanted_date.month, wanted_date.day, d2.hour, d2.min )
       # Build every time slot depending on the slice time
       build_time_slots( start_time, end_time, slots )
-      puts "openings - starts_at: #{d1} - ends_at: #{d2}"
     end
 
     # Finds appointments starting or finishing that day
@@ -48,7 +47,6 @@ class Event < ActiveRecord::Base
         # Starts during a slot / Ends during a slot / Or start before it and ends after it
         (d1 >= s && d1 < s2) || (d2 > s && d2 <= s2) || (d1 < s && d2 > s2)
       end
-      puts "appointments - starts_at: #{d1} - ends_at: #{d2}"
     end
 
     # Is there an open slot for our day ?
